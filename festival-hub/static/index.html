@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Festival Hub</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">✦</span>
+      <div>
+        <h1>Festival Hub</h1>
+        <p class="sub" id="season-line">Loading submissions…</p>
+      </div>
+    </div>
+    <div class="countdowns" id="countdowns"></div>
+    <div class="top-actions">
+      <span class="badge demo" id="demo-badge" hidden>DEMO DATA</span>
+      <span class="badges" id="scope-badges"></span>
+      <button id="theme-btn" class="ghost" title="Toggle light/dark">◐</button>
+      <button id="refresh-btn" title="Pull the latest from FilmFreeway">↻ Refresh</button>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="overview" class="active">Overview</button>
+    <button data-tab="submissions">Submissions</button>
+    <button data-tab="programme">Shortlist &amp; Programme</button>
+    <button data-tab="insights">Insights</button>
+    <button data-tab="exports">Exports</button>
+  </nav>
+
+  <main>
+    <div id="error" class="error" hidden></div>
+
+    <section id="tab-overview" class="tab active">
+      <div class="kpis" id="kpis"></div>
+      <div class="grid charts">
+        <div class="card wide"><h3>Submissions over time</h3><div id="chart-timeline"></div></div>
+        <div class="card"><h3>Categories</h3><div id="chart-categories"></div></div>
+        <div class="card"><h3>Deadlines</h3><div id="chart-deadlines"></div></div>
+        <div class="card"><h3>Countries</h3><div id="chart-countries"></div></div>
+        <div class="card"><h3>Genres</h3><div id="chart-genres"></div></div>
+        <div class="card"><h3>Runtime</h3><div id="chart-runtime"></div></div>
+        <div class="card"><h3>Languages</h3><div id="chart-languages"></div></div>
+        <div class="card"><h3>Project types</h3><div id="chart-types"></div></div>
+        <div class="card"><h3>Revenue by category</h3><div id="chart-revenue"></div></div>
+      </div>
+    </section>
+
+    <section id="tab-submissions" class="tab">
+      <div class="filters">
+        <input id="f-search" type="search" placeholder="Search title, director, synopsis, tracking #…">
+        <select id="f-category"><option value="">All categories</option></select>
+        <select id="f-deadline"><option value="">All deadlines</option></select>
+        <select id="f-country"><option value="">All countries</option></select>
+        <select id="f-genre"><option value="">All genres</option></select>
+        <select id="f-status"><option value="">All statuses</option></select>
+        <select id="f-ai">
+          <option value="">AI: any</option>
+          <option value="ai_made">AI-made</option>
+          <option value="ai_topic">About AI</option>
+          <option value="none">No AI</option>
+        </select>
+        <select id="f-flag">
+          <option value="">Any decision</option>
+          <option value="yes">✓ Yes</option>
+          <option value="maybe">? Maybe</option>
+          <option value="no">✗ No</option>
+          <option value="unrated">Not yet decided</option>
+          <option value="shortlist">★ Shortlisted</option>
+        </select>
+        <label class="chk"><input type="checkbox" id="f-student"> Student</label>
+        <label class="chk"><input type="checkbox" id="f-first"> First-time</label>
+        <label class="chk"><input type="checkbox" id="f-trailer"> Has trailer</label>
+        <label class="range">Runtime <input id="f-min" type="number" min="0" placeholder="min"> – <input id="f-max" type="number" min="0" placeholder="max"> min</label>
+        <button class="ghost" id="f-clear">Clear</button>
+      </div>
+      <div class="table-meta">
+        <span id="result-count"></span>
+        <span class="hint">Tip: press <kbd>/</kbd> to search, <kbd>j</kbd>/<kbd>k</kbd> to move in the drawer, <kbd>1</kbd>–<kbd>5</kbd> to rate, <kbd>y</kbd>/<kbd>m</kbd>/<kbd>n</kbd> to decide, <kbd>s</kbd> to shortlist.</span>
+      </div>
+      <div class="table-wrap">
+        <table id="sub-table">
+          <thead><tr id="sub-head"></tr></thead>
+          <tbody id="sub-body"></tbody>
+        </table>
+      </div>
+      <div class="pager" id="pager"></div>
+    </section>
+
+    <section id="tab-programme" class="tab">
+      <div class="grid two">
+        <div class="card">
+          <div class="card-head">
+            <h3>Shortlist <span class="muted" id="shortlist-count"></span></h3>
+            <select id="shortlist-sort">
+              <option value="rating">Sort: my rating</option>
+              <option value="title">Sort: title</option>
+              <option value="runtime">Sort: runtime</option>
+              <option value="category">Sort: category</option>
+            </select>
+          </div>
+          <p class="muted small">Drag films into a programme block. Shortlist from the table with ★ or <kbd>s</kbd>.</p>
+          <ul class="film-list" id="shortlist"></ul>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <h3>Programme blocks</h3>
+            <button id="add-block">+ Add block</button>
+          </div>
+          <div id="blocks"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-insights" class="tab">
+      <div class="grid two">
+        <div class="card"><h3>Repeat submitters</h3><p class="muted small">Directors with more than one entry this season.</p><div id="ins-repeat"></div></div>
+        <div class="card"><h3>Possible duplicates</h3><p class="muted small">Same title submitted more than once.</p><div id="ins-dupes"></div></div>
+        <div class="card"><h3>Category fit check</h3><p class="muted small">Runtime doesn't match the category's limit.</p><div id="ins-fit"></div></div>
+        <div class="card"><h3>Missing materials</h3><p class="muted small">No synopsis, trailer or screener link.</p><div id="ins-missing"></div></div>
+        <div class="card"><h3>Festival track record</h3><p class="muted small">Films that list laurels or awards elsewhere.</p><div id="ins-laurels"></div></div>
+        <div class="card"><h3>Discount codes used</h3><div id="ins-discounts"></div></div>
+      </div>
+    </section>
+
+    <section id="tab-exports" class="tab">
+      <div class="grid two">
+        <div class="card">
+          <h3>Spreadsheets</h3>
+          <p class="muted small">CSV opens in Excel, Numbers or Google Sheets.</p>
+          <div class="btn-col">
+            <button id="exp-filtered">Download filtered submissions (CSV)</button>
+            <button id="exp-all">Download all submissions (CSV)</button>
+            <button id="exp-shortlist">Download shortlist with notes (CSV)</button>
+            <button id="exp-programme">Download programme schedule (CSV)</button>
+            <button id="exp-tracking">Copy tracking numbers of shortlist</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Selections page</h3>
+          <p class="muted small">A printable page of your shortlisted films with title, director, country, runtime and synopsis. Save it as PDF from the print dialog.</p>
+          <div class="btn-col">
+            <button id="exp-selections">Open selections page</button>
+            <button id="exp-programme-page">Open printable programme</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Backup your workspace</h3>
+          <p class="muted small">Ratings, decisions, notes, shortlist and blocks are saved in <code>festival-hub/data/workspace.json</code>. Download a copy or restore one here.</p>
+          <div class="btn-col">
+            <button id="exp-workspace">Download workspace backup</button>
+            <label class="file-btn">Restore from backup<input type="file" id="imp-workspace" accept="application/json"></label>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-inner">
+      <div class="drawer-head">
+        <div>
+          <p class="muted small" id="d-tracking"></p>
+          <h2 id="d-title"></h2>
+          <p id="d-byline"></p>
+        </div>
+        <div class="drawer-nav">
+          <button class="ghost" id="d-prev" title="Previous (k)">↑</button>
+          <button class="ghost" id="d-next" title="Next (j)">↓</button>
+          <button class="ghost" id="d-close" title="Close (Esc)">✕</button>
+        </div>
+      </div>
+      <div class="decide">
+        <div class="stars" id="d-stars"></div>
+        <div class="seg" id="d-flag">
+          <button data-flag="yes">✓ Yes</button>
+          <button data-flag="maybe">? Maybe</button>
+          <button data-flag="no">✗ No</button>
+        </div>
+        <button id="d-shortlist" class="ghost">☆ Shortlist</button>
+      </div>
+      <div id="d-body"></div>
+      <label class="notes-label">Team notes <span class="muted small">(saved on this computer)</span></label>
+      <textarea id="d-notes" rows="5" placeholder="What did you think?"></textarea>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
