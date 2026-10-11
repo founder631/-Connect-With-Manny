@@ -2,3 +2,6 @@
 festival-hub/.env
 festival-hub/data/
 __pycache__/
+overtyme-studio/Results/
+overtyme-studio/reference.*
+overtyme-studio/studio.lock

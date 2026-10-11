@@ -1,0 +1,594 @@
+[
+  {
+    "id": "mad-scientist-01",
+    "packId": "mad-scientist",
+    "pack": "Creative Mad Scientist",
+    "title": "Prototype",
+    "file": "Workflows/Creative_Mad_Scientist/01_Prototype_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. The subject holds up an unfinished handmade gadget, studying it closely. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "373",
+    "originalSamplerSeed": 137746473340348
+  },
+  {
+    "id": "mad-scientist-02",
+    "packId": "mad-scientist",
+    "pack": "Creative Mad Scientist",
+    "title": "Experiment",
+    "file": "Workflows/Creative_Mad_Scientist/02_Experiment_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. The subject stands at a table covered in half-finished sketches, cables, and small tools. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "374",
+    "originalSamplerSeed": 130992063126249
+  },
+  {
+    "id": "mad-scientist-03",
+    "packId": "mad-scientist",
+    "pack": "Creative Mad Scientist",
+    "title": "Discovery",
+    "file": "Workflows/Creative_Mad_Scientist/03_Discovery_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. The subject's face lights up mid-realization, one hand frozen over a glowing screen. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "376",
+    "originalSamplerSeed": 333908457097118
+  },
+  {
+    "id": "mad-scientist-04",
+    "packId": "mad-scientist",
+    "pack": "Creative Mad Scientist",
+    "title": "Failure",
+    "file": "Workflows/Creative_Mad_Scientist/04_Failure_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. The subject looks at a small device that has just sparked and gone dark, unbothered, already reaching for a tool. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "379",
+    "originalSamplerSeed": 183201065905899
+  },
+  {
+    "id": "mad-scientist-05",
+    "packId": "mad-scientist",
+    "pack": "Creative Mad Scientist",
+    "title": "Remix",
+    "file": "Workflows/Creative_Mad_Scientist/05_Remix_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. The subject stands surrounded by turntables, cameras, and instruments stacked together into one hybrid machine. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "380",
+    "originalSamplerSeed": 821793218835410
+  },
+  {
+    "id": "mad-scientist-06",
+    "packId": "mad-scientist",
+    "pack": "Creative Mad Scientist",
+    "title": "Obsession",
+    "file": "Workflows/Creative_Mad_Scientist/06_Obsession_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. The subject sits in a room lit only by the glow of several monitors, completely locked in. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "377",
+    "originalSamplerSeed": 1005588104225801
+  },
+  {
+    "id": "mad-scientist-07",
+    "packId": "mad-scientist",
+    "pack": "Creative Mad Scientist",
+    "title": "Eureka",
+    "file": "Workflows/Creative_Mad_Scientist/07_Eureka_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. The subject holds a finished glowing prototype above their head triumphantly. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "381",
+    "originalSamplerSeed": 932134245363804
+  },
+  {
+    "id": "mad-scientist-08",
+    "packId": "mad-scientist",
+    "pack": "Creative Mad Scientist",
+    "title": "Controlled Chaos",
+    "file": "Workflows/Creative_Mad_Scientist/08_Controlled_Chaos_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. The subject stands calm at the center of a workshop with tools and parts scattered everywhere around them. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "424",
+    "originalSamplerSeed": 244104020315263
+  },
+  {
+    "id": "lemonade-patron-01",
+    "packId": "lemonade-patron",
+    "pack": "Lemonade & Patron",
+    "title": "The Lean",
+    "file": "Workflows/Lemonade_N_Patron/01_The_Lean_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. The subject leans one elbow on the bar, chin resting in their hand, tired eyes, a drink in front of them. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "373",
+    "originalSamplerSeed": 593213676022000
+  },
+  {
+    "id": "lemonade-patron-02",
+    "packId": "lemonade-patron",
+    "pack": "Lemonade & Patron",
+    "title": "Glass in Hand",
+    "file": "Workflows/Lemonade_N_Patron/02_Glass_in_Hand_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. The subject holds a rocks glass up close to the camera, warm bokeh lights blurred behind them. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "374",
+    "originalSamplerSeed": 337906370676252
+  },
+  {
+    "id": "lemonade-patron-03",
+    "packId": "lemonade-patron",
+    "pack": "Lemonade & Patron",
+    "title": "Through the Ice",
+    "file": "Workflows/Lemonade_N_Patron/03_Through_the_Ice_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. Close on the subject's face, seen past a blurred glass and ice sitting in the foreground. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "376",
+    "originalSamplerSeed": 87817723747505
+  },
+  {
+    "id": "lemonade-patron-04",
+    "packId": "lemonade-patron",
+    "pack": "Lemonade & Patron",
+    "title": "The Reach",
+    "file": "Workflows/Lemonade_N_Patron/04_The_Reach_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. The subject reaches one hand toward a bottle on the bar, eyes on the camera. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "379",
+    "originalSamplerSeed": 497007602758263
+  },
+  {
+    "id": "lemonade-patron-05",
+    "packId": "lemonade-patron",
+    "pack": "Lemonade & Patron",
+    "title": "City Lights",
+    "file": "Workflows/Lemonade_N_Patron/05_City_Lights_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. The subject sits at an outdoor bar rail with a city skyline glowing behind them at dusk, contemplative. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "380",
+    "originalSamplerSeed": 227413413290762
+  },
+  {
+    "id": "lemonade-patron-06",
+    "packId": "lemonade-patron",
+    "pack": "Lemonade & Patron",
+    "title": "Last Call",
+    "file": "Workflows/Lemonade_N_Patron/06_Last_Call_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. The subject stands slowly, jacket slipping off one shoulder, glancing back over their shoulder. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "377",
+    "originalSamplerSeed": 31090319992446
+  },
+  {
+    "id": "lemonade-patron-07",
+    "packId": "lemonade-patron",
+    "pack": "Lemonade & Patron",
+    "title": "The Toast",
+    "file": "Workflows/Lemonade_N_Patron/07_The_Toast_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. The subject raises a glass slightly toward the camera, tired half-smile. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "381",
+    "originalSamplerSeed": 898583740387892
+  },
+  {
+    "id": "lemonade-patron-08",
+    "packId": "lemonade-patron",
+    "pack": "Lemonade & Patron",
+    "title": "Golden Hour",
+    "file": "Workflows/Lemonade_N_Patron/08_Golden_Hour_API.json",
+    "mapping": {
+      "reference": {
+        "node": "1",
+        "input": "image"
+      },
+      "positive": {
+        "node": "8",
+        "input": "prompt"
+      },
+      "negative": {
+        "node": "7",
+        "input": "prompt"
+      },
+      "width": {
+        "node": "26",
+        "input": "value"
+      },
+      "height": {
+        "node": "27",
+        "input": "value"
+      },
+      "seed": {
+        "node": "22",
+        "input": "seed"
+      }
+    },
+    "description": "Keep the subject's face, hair, gender and natural features exactly as in the photo. The subject sits back in their chair, head tilted against one hand, eyes half closed, warm golden light. Ultra detailed, sharp focus, natural skin texture, realistic detailed eyes, professional color grading, high resolution.",
+    "expectedOutputs": 1,
+    "originalOutput": "424",
+    "originalSamplerSeed": 793998180914837
+  }
+]
