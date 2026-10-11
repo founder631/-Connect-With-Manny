@@ -73,3 +73,48 @@ You need Python 3, which is already on most Macs. Nothing else needs installing.
   cover letter or format mentions AI tools such as Runway, Sora, Midjourney or
   ElevenLabs, or says "AI-generated". Films that only talk about AI are marked
   "about AI". Check before you rely on it.
+
+## OverTyme Studio (ComfyUI One Image Packs)
+
+`overtyme-studio/` is a web page that runs the 16 OverTyme one-image workflows
+(Creative Mad Scientist and Lemonade & Patron) on your own ComfyUI. Clients
+use the page and never see the node graph or a terminal.
+
+**What the client sees**
+
+1. **Your photo:** drag in a JPG, PNG or WebP. If a `reference.png` sits in
+   the folder, it is used by default.
+2. **Choose a scene:** tabs for the two packs, with a card for each of the 8 scenes.
+3. **Frame & generate:** portrait (768 × 1024) or widescreen (1280 × 720),
+   then **Generate photo**.
+
+While it works, a live panel shows the status and a timer. When it is done,
+the photo appears with **Download** and **Make another** (a fresh variation).
+Every finished photo stays in a **Your photos** gallery. A badge shows whether
+ComfyUI is ready, busy or offline.
+
+### Run it
+
+Start ComfyUI first (it should be at <http://127.0.0.1:8188>), then:
+
+```
+python3 overtyme-studio/studio.py
+```
+
+Your browser opens at <http://127.0.0.1:8790>.
+
+- `--share` lets a client on the same Wi-Fi open it from their phone or laptop.
+  It prints the address to give them. There is no password, so only use this
+  on a network you trust.
+- `--comfy http://host:port` points it at a ComfyUI running somewhere else.
+- `python3 overtyme-studio/generate.py` still works as the terminal launcher.
+
+### Notes
+
+- It makes one photo at a time. If ComfyUI is already busy, the page says so
+  and does not add another job.
+- Finished photos, along with the photo each one was made from, are saved in
+  `overtyme-studio/Results/`. That folder and any `reference.*` photo are
+  git-ignored, so client photos are never committed.
+- The original models, LoRAs, prompts and 40-step quality settings are kept.
+  Each run gets a new random seed.

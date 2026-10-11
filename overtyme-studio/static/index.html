@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>OverTyme Studio</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<main>
+  <div class="topbar">
+    <div class="brand">OverTyme Studio</div>
+    <div class="engine" id="engine"><span class="dot"></span><span id="engine-text">Checking the engine…</span></div>
+  </div>
+
+  <header>
+    <h1>One photo.<br>Choose your inspiration.</h1>
+    <p>Add a photo, pick a scene, and press Generate. Each scene makes one high-quality image.</p>
+  </header>
+
+  <div class="layout">
+    <div class="steps">
+      <section class="step">
+        <h2><span class="num">1</span> Your photo</h2>
+        <label class="drop" id="drop">
+          <input type="file" id="photo-input" accept="image/png,image/jpeg,image/webp" hidden>
+          <img id="photo-preview" alt="" hidden>
+          <span class="drop-text" id="drop-text"><strong>Add a photo</strong><br>Drag it here or click to choose. JPG, PNG or WebP, under 10 MB.</span>
+        </label>
+        <button class="link" id="photo-clear" hidden>Use a different photo</button>
+      </section>
+
+      <section class="step">
+        <h2><span class="num">2</span> Choose a scene</h2>
+        <div class="tabs" id="tabs" role="tablist"></div>
+        <div class="grid" id="scenes"></div>
+      </section>
+
+      <section class="step">
+        <h2><span class="num">3</span> Frame &amp; generate</h2>
+        <div class="formats" id="formats" role="radiogroup" aria-label="Frame"></div>
+        <div class="summary" id="summary">Choose a scene to continue.</div>
+        <button class="primary" id="generate" disabled>Generate photo</button>
+        <p class="error" id="error" role="alert"></p>
+      </section>
+    </div>
+
+    <aside class="stage" id="stage" aria-live="polite">
+      <div class="stage-empty" id="stage-empty">
+        <div class="frame-hint"></div>
+        <p>Your photo appears here.</p>
+      </div>
+      <div class="stage-job" id="stage-job" hidden>
+        <div class="stage-image" id="stage-image"></div>
+        <div class="stage-meta">
+          <div>
+            <div class="eyebrow" id="job-pack"></div>
+            <h3 id="job-title"></h3>
+            <div class="job-status" id="job-status"></div>
+          </div>
+          <div class="stage-actions" id="job-actions"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <section class="gallery-wrap" id="gallery-wrap" hidden>
+    <h2>Your photos</h2>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <footer>Private, local generation on your own ComfyUI. Nothing is uploaded to the cloud.</footer>
+</main>
+
+<dialog id="viewer">
+  <img id="viewer-img" alt="">
+  <form method="dialog"><button class="close" aria-label="Close">×</button></form>
+</dialog>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
