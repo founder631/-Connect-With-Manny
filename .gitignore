@@ -1,0 +1,4 @@
+.env
+festival-hub/.env
+festival-hub/data/
+__pycache__/
