@@ -193,7 +193,7 @@ function renderStage() {
     const ref = job.reference ? el('img', { class: 'ref', src: '/results/' + job.reference, alt: '' }) : null;
     const overlay = job.status === 'failed'
       ? el('div', { class: 'overlay' }, [el('strong', { text: 'Not finished' })])
-      : el('div', { class: 'overlay' }, [el('div', { class: 'spinner' }), el('strong', { text: 'Making your photo' }), el('span', { text: 'High-quality mode can take several minutes.' })]);
+      : el('div', { class: 'overlay' }, [el('div', { class: 'spinner' }), el('strong', { text: 'Making your photo' }), el('span', { text: 'This can take a few minutes.' })]);
     image.replaceChildren(...[ref, overlay].filter(Boolean));
     $('job-actions').replaceChildren();
   }
@@ -222,9 +222,10 @@ function render() {
 function renderEngine() {
   const engine = state.engine, badge = $('engine');
   if (!engine) return;
+  const router = engine.name === 'router';
   badge.className = 'engine ' + (!engine.online ? 'off' : engine.running || engine.pending ? 'busy' : 'ok');
-  $('engine-text').textContent = !engine.online ? 'Engine offline: start ComfyUI'
-    : engine.running || engine.pending ? 'Engine busy' : 'Engine ready';
+  $('engine-text').textContent = !engine.online ? (router ? 'Comfy Router: API key missing' : 'Engine offline: start ComfyUI')
+    : (router ? 'Comfy Router ' : 'Engine ') + (engine.running || engine.pending ? 'busy' : 'ready');
 }
 
 async function poll() {
@@ -241,6 +242,9 @@ async function poll() {
 
 async function start() {
   state.catalog = await (await fetch('/api/catalog')).json();
+  if (state.catalog.engine?.name === 'router') {
+    $('footer-text').textContent = `Photos are made on Comfy Router (${state.catalog.engine.model}). Your photo is sent to Comfy to create each image.`;
+  }
   const saved = restore();
   state.pack = state.catalog.packs.some((p) => p.id === saved.pack) ? saved.pack : state.catalog.packs[0].id;
   state.scene = saved.scene && sceneById(saved.scene) ? saved.scene : null;

@@ -109,6 +109,40 @@ Your browser opens at <http://127.0.0.1:8790>.
 - `--comfy http://host:port` points it at a ComfyUI running somewhere else.
 - `python3 overtyme-studio/generate.py` still works as the terminal launcher.
 
+### Make studio photos on Comfy Router
+
+Instead of your Spark, the studio can send each photo to
+[Comfy Router](https://docs.comfy.org/development/comfy-router/quickstart):
+
+1. Copy `overtyme-studio/.env.example` to `overtyme-studio/.env` and fill in
+   `COMFY_API_KEY`.
+2. Start it with:
+
+   ```
+   python3 overtyme-studio/studio.py --engine router
+   ```
+
+   It uses `qwen/qwen-image-3.0-pro` by default. Pick another model with
+   `--model provider/model`.
+
+When it starts, the studio reads the model's live schema and prints where each
+input goes, for example `prompt → prompt, photo → images[0], size → nearest
+size option`. Each scene's own prompt and negative prompt are sent with the
+client's photo. Portrait and widescreen pick the closest size the model
+offers. If the model has no prompt or photo input, or needs an input the
+studio can't fill, it stops and says so instead of sending a bad request.
+
+Notes for Router mode:
+
+- The client's photo is sent to Comfy to make each image, and the page footer
+  says so.
+- Each photo is a queued Router request with its own `Idempotency-Key`. If you
+  restart the studio, unfinished photos carry on and are never sent twice.
+- Each person only sees their own photos, including when you use `--share`.
+- Each photo uses Comfy credits.
+- Without `--engine router`, the studio uses your local ComfyUI exactly as
+  before.
+
 ### Comfy Router test console
 
 Open <http://127.0.0.1:8790/router> (also linked at the bottom of the studio)
