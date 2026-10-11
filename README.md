@@ -95,7 +95,33 @@ ComfyUI is ready, busy or offline.
 
 ### Run it
 
-Start ComfyUI first (it should be at <http://127.0.0.1:8188>), then:
+**Double-click start (DGX Spark / Linux desktop)**
+
+Run this once in a terminal:
+
+```
+overtyme-studio/start-studio.sh --install
+```
+
+It adds an **OverTyme Studio** icon to your Desktop and app menu. If the
+Desktop icon shows a warning the first time, right-click it and choose
+**Allow Launching**. From then on, double-click the icon. It does three things:
+
+- Starts ComfyUI if it isn't running yet. For this, add the folder you
+  installed ComfyUI in to `overtyme-studio/.env`, for example
+  `COMFYUI_DIR=/home/you/ComfyUI`. It uses that folder's `venv` or `.venv`
+  if there is one.
+- Starts the studio and opens it in your browser. Keep the terminal window
+  open while you work, and close it to stop the studio. ComfyUI keeps
+  running.
+- If the studio is already running, it just opens the page again.
+
+`overtyme-studio/.env` can also hold `STUDIO_ENGINE=router` (make photos on
+Comfy Router) and `STUDIO_SHARE=1` (let devices on your Wi-Fi open it). See
+`.env.example`.
+
+**Or start it by hand.** Start ComfyUI first (it should be at
+<http://127.0.0.1:8188>), then:
 
 ```
 python3 overtyme-studio/studio.py
