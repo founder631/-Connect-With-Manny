@@ -29,6 +29,7 @@ import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+import router
 import studio_runtime as comfy
 
 ROOT = Path(__file__).resolve().parent
@@ -194,6 +195,150 @@ def watcher():
         time.sleep(2)
 
 
+# ---------- Comfy Router test console ----------
+
+ROUTER_RESULTS = RESULTS / 'router'
+ROUTER_JOBS_FILE = ROUTER_RESULTS / 'jobs.json'
+DEFAULT_ROUTER_MODEL = 'qwen/qwen-image-3.0-pro'
+router_jobs = {}
+
+
+def save_router_jobs():
+    ROUTER_RESULTS.mkdir(parents=True, exist_ok=True)
+    temp = ROUTER_RESULTS / 'jobs.tmp'
+    temp.write_text(json.dumps(list(router_jobs.values()), indent=2))
+    temp.replace(ROUTER_JOBS_FILE)
+
+
+def load_router_jobs():
+    if ROUTER_JOBS_FILE.exists():
+        try:
+            router_jobs.update({job['id']: job for job in json.loads(ROUTER_JOBS_FILE.read_text())})
+        except (ValueError, KeyError):
+            pass
+    for job in router_jobs.values():
+        if job['status'] in ('done', 'failed'):
+            continue
+        if job.get('request_id'):
+            threading.Thread(target=follow_router_job, args=(job['id'],), daemon=True).start()
+        else:
+            job.update(status='failed', payload=None, error='The studio stopped before Router confirmed this request. Check your Comfy account before trying again.')
+
+
+def shorten(value):
+    """Keep the job log readable: trim long strings such as base64 images."""
+    if isinstance(value, str):
+        return value if len(value) <= 300 else value[:120] + f'… ({len(value)} chars)'
+    if isinstance(value, dict):
+        return {key: shorten(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [shorten(item) for item in value[:50]]
+    return value
+
+
+def router_update(job_id, **changes):
+    with jobs_lock:
+        router_jobs[job_id].update(changes)
+        save_router_jobs()
+
+
+def router_log(job_id, step, status, body):
+    with jobs_lock:
+        router_jobs[job_id]['log'].append({'t': time.time(), 'step': step, 'http': status, 'body': shorten(body)})
+        save_router_jobs()
+
+
+def start_router_job(owner, model, payload):
+    router.check_model(model)
+    if not isinstance(payload, dict) or not payload:
+        raise ValueError('The request body must be a JSON object with the model inputs.')
+    if not router.api_key():
+        raise ValueError('COMFY_API_KEY is not set. Add it to overtyme-studio/.env and restart the studio.')
+    job_id = uuid.uuid4().hex[:12]
+    job = {'id': job_id, 'owner': owner, 'model': model, 'status': 'submitting', 'created': time.time(),
+           'idempotency_key': router.new_idempotency_key(), 'request_id': None, 'error': None,
+           'files': [], 'output': None, 'log': [], 'payload': payload}
+    with jobs_lock:
+        router_jobs[job_id] = job
+        save_router_jobs()
+    threading.Thread(target=run_router_job, args=(job_id,), daemon=True).start()
+    return job
+
+
+def run_router_job(job_id):
+    job = router_jobs[job_id]
+    try:
+        submitted = router.submit(job['model'], job['payload'], job['idempotency_key'],
+                                  lambda step, status, body: router_log(job_id, step, status, body))
+        request_id = submitted.get('request_id') or submitted.get('id')
+        if not request_id:
+            raise router.RouterError(0, submitted, 'Router accepted the request but returned no request_id.')
+        base = f'{router.BASE}/v2/models/{job["model"]}/requests/{request_id}'
+        router_update(job_id, request_id=request_id, status=submitted.get('status') or 'IN_QUEUE',
+                      status_url=router.find_url(submitted, 'status') or base + '/status',
+                      response_url=router.find_url(submitted, 'response', 'result') or base,
+                      payload=None)  # inputs (and any embedded photo) are no longer needed
+        follow_router_job(job_id)
+    except (router.RouterError, ValueError, OSError) as error:
+        router_update(job_id, status='failed', error=str(error), payload=None, finished=time.time())
+
+
+def follow_router_job(job_id):
+    """Poll the status route (honouring Retry-After) until COMPLETED, then collect and download."""
+    job = router_jobs[job_id]
+    deadline = time.time() + 30 * 60
+    try:
+        while time.time() < deadline:
+            status, headers, body = router.request('GET', job['status_url'])
+            if status != 200 or not isinstance(body, dict):
+                router_log(job_id, 'status', status, body)
+                if status in router.RETRYABLE or status >= 500:
+                    time.sleep(router.retry_after(headers, 5))
+                    continue
+                raise router.RouterError(status, body)
+            if body.get('status') != job.get('status'):
+                router_log(job_id, 'status', status, body)
+            router_update(job_id, status=body.get('status') or job['status'])
+            if body.get('status') == 'COMPLETED':
+                if body.get('error_type'):
+                    raise router.RouterError(status, body, f'{body["error_type"]}: {body.get("error") or body.get("message") or "the model did not finish."}')
+                return collect_router_job(job_id)
+            time.sleep(router.retry_after(headers, 3))
+        raise router.RouterError(0, None, 'Stopped following after 30 minutes. The request may still finish on Router.')
+    except (router.RouterError, ValueError, OSError) as error:
+        router_update(job_id, status='failed', error=str(error), finished=time.time())
+
+
+def collect_router_job(job_id):
+    job = router_jobs[job_id]
+    while True:
+        status, headers, body = router.request('GET', job['response_url'])
+        router_log(job_id, 'collect', status, body)
+        if status == 202:
+            time.sleep(router.retry_after(headers, 3))
+            continue
+        if status != 200:
+            raise router.RouterError(status, body)
+        if isinstance(body, dict) and body.get('error_type'):
+            raise router.RouterError(status, body, f'{body["error_type"]}: {body.get("error") or body.get("message") or ""}')
+        break
+    folder = ROUTER_RESULTS / job_id
+    folder.mkdir(parents=True, exist_ok=True)
+    files = []
+    for index, url in enumerate(router.asset_urls(body), 1):
+        data, content_type = router.download(url)
+        extension = mimetypes.guess_extension((content_type or '').split(';')[0]) or Path(urllib.parse.urlparse(url).path).suffix or '.bin'
+        name = f'{index:02d}{extension}'
+        (folder / name).write_bytes(data)
+        files.append(f'router/{job_id}/{name}')
+    router_update(job_id, status='done', files=files, output=shorten(body), finished=time.time())
+
+
+def public_router_job(job):
+    return {key: job.get(key) for key in (
+        'id', 'model', 'status', 'created', 'finished', 'request_id', 'idempotency_key', 'error', 'files', 'output', 'log')}
+
+
 class Handler(BaseHTTPRequestHandler):
     server_version = 'OverTymeStudio/1.0'
 
@@ -218,13 +363,44 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Content-Type', mimetypes.guess_type(path.name)[0] or 'application/octet-stream')
         self.send_header('Content-Length', str(len(data)))
         self.send_header('Cache-Control', 'max-age=86400' if cache else 'no-cache')
+        if getattr(self, 'new_owner', None):
+            self.send_header('Set-Cookie', f'studio_owner={self.new_owner}; Path=/; HttpOnly; SameSite=Strict; Max-Age=31536000')
         self.end_headers()
         self.wfile.write(data)
+
+    def owner(self):
+        cookie = self.headers.get('Cookie') or ''
+        match = re.search(r'(?:^|;\s*)studio_owner=([a-f0-9]{32})', cookie)
+        return match.group(1) if match else None
 
     def do_GET(self):
         path = urllib.parse.urlparse(self.path).path
         if path == '/':
             return self.send_file(STATIC / 'index.html')
+        if path == '/router':
+            self.new_owner = None if self.owner() else secrets.token_hex(16)
+            return self.send_file(STATIC / 'router.html')
+        if path == '/api/router/config':
+            return self.send_json({'keySet': bool(router.api_key()), 'base': router.BASE, 'defaultModel': DEFAULT_ROUTER_MODEL})
+        if path == '/api/router/schema':
+            model = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get('model', [''])[0]
+            try:
+                return self.send_json(router.schema(model))
+            except ValueError as error:
+                return self.send_json({'error': str(error)}, 400)
+            except router.RouterError as error:
+                return self.send_json({'error': str(error)}, 502)
+            except OSError:
+                return self.send_json({'error': 'Cannot reach ' + router.BASE + '.'}, 502)
+        if path == '/api/router/jobs':
+            owner = self.owner()
+            with jobs_lock:
+                mine = [public_router_job(job) for job in router_jobs.values() if owner and job['owner'] == owner]
+            return self.send_json({'jobs': sorted(mine, key=lambda job: -job['created'])})
+        if path.startswith('/results/router/'):
+            job = router_jobs.get(path.split('/')[3])
+            if not job or job['owner'] != self.owner():
+                return self.send_json({'error': 'Not found'}, 404)
         if path.startswith('/static/'):
             return self.send_safe(STATIC, path[len('/static/'):])
         if path.startswith('/results/'):
@@ -246,8 +422,25 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_json({'error': 'Not found'}, 404)
         return self.send_file(target, cache)
 
+    def post_router_job(self):
+        owner = self.owner()
+        if not owner:
+            return self.send_json({'error': 'Reload the page and try again.'}, 403)
+        length = int(self.headers.get('Content-Length') or 0)
+        if not 0 < length <= MAX_BODY:
+            return self.send_json({'error': 'The request is empty or over 15 MB.'}, 413)
+        try:
+            body = json.loads(self.rfile.read(length))
+            job = start_router_job(owner, body.get('model', ''), body.get('input'))
+        except ValueError as error:
+            return self.send_json({'error': str(error)}, 400)
+        self.send_json({'job': public_router_job(job)})
+
     def do_POST(self):
-        if urllib.parse.urlparse(self.path).path != '/api/generate':
+        path = urllib.parse.urlparse(self.path).path
+        if path == '/api/router/jobs':
+            return self.post_router_job()
+        if path != '/api/generate':
             return self.send_json({'error': 'Not found'}, 404)
         length = int(self.headers.get('Content-Length') or 0)
         if not 0 < length <= MAX_BODY:
@@ -282,15 +475,19 @@ def main():
     parser.add_argument('--port', type=int, default=8790)
     parser.add_argument('--share', action='store_true', help='Let other devices on your network open the studio.')
     parser.add_argument('--comfy', default=comfy.BASE, help='ComfyUI address (default %(default)s).')
+    parser.add_argument('--router', default=router.BASE, help='Comfy Router address (default %(default)s).')
     parser.add_argument('--no-browser', action='store_true')
     args = parser.parse_args()
     comfy.BASE = args.comfy.rstrip('/')
+    router.BASE = args.router.rstrip('/')
 
     load_jobs()
+    load_router_jobs()
     threading.Thread(target=watcher, daemon=True).start()
     server = ThreadingHTTPServer(('0.0.0.0' if args.share else '127.0.0.1', args.port), Handler)
     url = f'http://127.0.0.1:{args.port}'
     print(f'OverTyme Studio is running at {url}')
+    print(f'Comfy Router test console: {url}/router' + ('' if router.api_key() else '  (add COMFY_API_KEY to overtyme-studio/.env first)'))
     if args.share and lan_address():
         print(f'On the same Wi-Fi, open http://{lan_address()}:{args.port}')
     print('Press Ctrl+C to stop. Jobs already sent to ComfyUI keep running.')

@@ -109,6 +109,34 @@ Your browser opens at <http://127.0.0.1:8790>.
 - `--comfy http://host:port` points it at a ComfyUI running somewhere else.
 - `python3 overtyme-studio/generate.py` still works as the terminal launcher.
 
+### Comfy Router test console
+
+Open <http://127.0.0.1:8790/router> (also linked at the bottom of the studio)
+to try models on [Comfy Router](https://docs.comfy.org/development/comfy-router/quickstart)
+before the studio switches over to it.
+
+1. Copy `overtyme-studio/.env.example` to `overtyme-studio/.env` and fill in
+   `COMFY_API_KEY`. The key is only read by the local server. It is never sent
+   to the browser and `.env` is git-ignored.
+2. Start the studio as usual. The console loads `qwen/qwen-image-3.0-pro` by
+   default. Type any `provider/model` and press **Load schema** to try another.
+3. The form is built from the model's live schema
+   (`https://api.comfy.org/v2/models/{provider}/{model}/openapi.json`). Photos
+   are sent as base64 data URIs. **Request body (JSON)** lets you send anything
+   the form doesn't cover.
+4. **Send to Router** queues the request
+   (`POST /v2/models/{provider}/{model}/requests`) with a fresh
+   `Idempotency-Key`. Then it follows the status route, honouring `Retry-After`,
+   until the status is `COMPLETED`, and downloads the result straight away
+   because Router links expire. On 409, 429 or 504 it retries with the same
+   key, so nothing runs or is charged twice. A 422 shows which input was
+   wrong.
+5. Each request shows its `request_id`, its result and every Router response.
+   Requests are tied to your browser, so other people on `--share` can't see
+   them. Results are saved in `overtyme-studio/Results/router/`.
+
+Each successful request uses Comfy credits.
+
 ### Notes
 
 - It makes one photo at a time. If ComfyUI is already busy, the page says so

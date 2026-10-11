@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Router Test Console</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<main>
+  <div class="topbar">
+    <div class="brand">OverTyme Studio · Comfy Router test</div>
+    <div class="engine" id="key-badge"><span class="dot"></span><span id="key-text">Checking API key…</span></div>
+  </div>
+
+  <header>
+    <h1>Test a model on Comfy Router.</h1>
+    <p>The form is built from the model's live schema, so you only see the inputs Router accepts. Your API key stays on this computer's server.</p>
+  </header>
+
+  <p class="notice" id="key-help" hidden>
+    Add your key to <code>overtyme-studio/.env</code> as <code>COMFY_API_KEY=…</code>, then restart <code>python3 overtyme-studio/studio.py</code>.
+  </p>
+
+  <div class="layout">
+    <div class="steps">
+      <section class="step">
+        <h2><span class="num">1</span> Model</h2>
+        <form class="model-row" id="model-form">
+          <label class="field grow"><span>Provider / model</span>
+            <input id="model" spellcheck="false" autocomplete="off" placeholder="qwen/qwen-image-3.0-pro">
+          </label>
+          <button class="btn solid" id="load">Load schema</button>
+        </form>
+        <p class="hint" id="schema-meta"></p>
+        <p class="error" id="schema-error" role="alert"></p>
+      </section>
+
+      <section class="step" id="inputs-step" hidden>
+        <h2><span class="num">2</span> Inputs</h2>
+        <div class="fields" id="fields"></div>
+        <details class="raw">
+          <summary>Request body (JSON)</summary>
+          <p class="hint">Edit this to send any input the form doesn't cover. Photos appear as <code>@photo:N</code> and are swapped in when you send.</p>
+          <textarea id="raw" rows="10" spellcheck="false"></textarea>
+          <button class="link" id="raw-reset" type="button">Rebuild from the form</button>
+        </details>
+      </section>
+
+      <section class="step" id="send-step" hidden>
+        <h2><span class="num">3</span> Send</h2>
+        <p class="hint">Queued delivery: one request, a unique Idempotency-Key, then the studio follows its status until it is <strong>COMPLETED</strong> and saves the result straight away.</p>
+        <button class="primary" id="send">Send to Router</button>
+        <p class="error" id="send-error" role="alert"></p>
+      </section>
+    </div>
+
+    <aside class="stage router-stage">
+      <h2>Requests</h2>
+      <div id="jobs"><p class="hint">Nothing sent yet.</p></div>
+    </aside>
+  </div>
+
+  <footer><a href="/">← Back to the studio</a></footer>
+</main>
+
+<dialog id="viewer">
+  <img id="viewer-img" alt="">
+  <form method="dialog"><button class="close" aria-label="Close">×</button></form>
+</dialog>
+
+<script src="/static/router.js"></script>
+</body>
+</html>
