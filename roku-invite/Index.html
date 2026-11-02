@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bring Your Film to Roku · Eudaimonia TV</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0F1018; --navy-2: #151827; --ocean: #003E8A; --signal: #1C7FD1; --sky: #4DC5FE;
+      --gold: #F5B942; --gold-soft: #FCEB7A; --ivory: #FDF9ED; --muted: #A9B2C8; --line: rgba(77,197,254,.18);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--navy); color: var(--ivory); font: 17px/1.6 Lato, Calibri, system-ui, sans-serif; }
+    h1, h2, h3 { font-family: Montserrat, system-ui, sans-serif; line-height: 1.15; margin: 0; }
+    a { color: var(--sky); }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+    /* Hero */
+    .hero { position: relative; overflow: hidden; padding: 28px 0 88px;
+      background:
+        radial-gradient(900px 480px at 78% 18%, rgba(28,127,209,.45), transparent 60%),
+        radial-gradient(520px 320px at 85% 30%, rgba(245,185,66,.16), transparent 70%),
+        radial-gradient(700px 500px at 0% 100%, rgba(0,62,138,.55), transparent 65%),
+        var(--navy); }
+    .hero::after { content: ""; position: absolute; inset: auto 0 0 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: .6; }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .nav img { height: 76px; width: auto; display: block; margin: -10px 0 -10px -18px; }
+    .nav a.btn { padding: 10px 18px; font-size: 15px; }
+    .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; margin-top: 56px; }
+    .eyebrow { display: inline-flex; gap: 8px; align-items: center; color: var(--gold); font: 700 13px/1 Montserrat, sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 28px; height: 2px; background: var(--gold); }
+    .hero h1 { font-size: clamp(38px, 6vw, 66px); font-weight: 800; margin: 18px 0 18px; letter-spacing: -.02em; }
+    .hero h1 em { font-style: normal; color: var(--gold); }
+    .lede { font-size: 19px; color: #D9DEEA; max-width: 560px; }
+    .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .btn { display: inline-block; text-decoration: none; border-radius: 999px; padding: 14px 26px; font: 700 16px/1 Montserrat, sans-serif; border: 2px solid transparent; cursor: pointer; transition: transform .15s, box-shadow .15s; }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-gold { background: var(--gold); color: var(--navy); box-shadow: 0 8px 30px rgba(245,185,66,.28); }
+    .btn-ghost { color: var(--ivory); border-color: rgba(253,249,237,.35); background: transparent; }
+    .badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; color: var(--muted); font-size: 14px; }
+    .badges span { border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; background: rgba(255,255,255,.03); }
+
+    /* TV graphic */
+    .tv { position: relative; aspect-ratio: 16/10; border-radius: 22px; padding: 14px; background: linear-gradient(160deg, #23283c, #0b0c13); box-shadow: 0 30px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(77,197,254,.25), 0 0 90px rgba(28,127,209,.35); }
+    .screen { position: relative; height: 100%; border-radius: 12px; overflow: hidden; background: radial-gradient(circle at 50% 40%, #12408a, #070a14 75%); }
+    .screen .rowlabel { position: absolute; left: 6%; font: 700 11px Montserrat, sans-serif; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+    .screen .tiles { position: absolute; left: 6%; right: -10%; display: flex; gap: 3%; }
+    .screen .tile { flex: 0 0 24%; aspect-ratio: 16/9; border-radius: 6px; background: linear-gradient(135deg, var(--c1), var(--c2)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+    .screen .tile.focus { outline: 3px solid var(--gold); outline-offset: 2px; box-shadow: 0 0 24px rgba(245,185,66,.55); }
+    .screen .glow { position: absolute; right: 5%; top: 3%; width: 14%; }
+    .stand { width: 34%; height: 10px; margin: 10px auto 0; border-radius: 0 0 14px 14px; background: linear-gradient(#20253a, #0b0c13); }
+
+    section { padding: 84px 0; }
+    .section-head { max-width: 640px; margin-bottom: 40px; }
+    .section-head h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; margin-top: 12px; }
+    .section-head p { color: var(--muted); margin: 12px 0 0; }
+
+    /* Paths */
+    .paths { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .path { border-radius: 20px; padding: 30px; background: var(--navy-2); border: 1px solid var(--line); position: relative; overflow: hidden; }
+    .path.gold { border-color: rgba(245,185,66,.4); background: linear-gradient(160deg, rgba(245,185,66,.10), var(--navy-2) 55%); }
+    .path .tag { font: 700 12px Montserrat, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--sky); }
+    .path.gold .tag { color: var(--gold); }
+    .path h3 { font-size: 24px; margin: 10px 0 10px; }
+    .path p { color: #D2D8E6; margin: 0; }
+    .path .price { font: 800 34px Montserrat, sans-serif; margin-top: 18px; }
+
+    /* Channels */
+    .channels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .ch { display: flex; flex-direction: column; border-radius: 18px; overflow: hidden; background: var(--navy-2); border: 1px solid var(--line); transition: transform .15s, border-color .15s; }
+    .ch:hover { transform: translateY(-3px); border-color: rgba(245,185,66,.55); }
+    .ch .art { position: relative; aspect-ratio: 16/9; display: grid; place-items: center; background: radial-gradient(circle at 30% 25%, var(--a1), transparent 60%), linear-gradient(135deg, var(--a2), #0a0c16); }
+    .ch .art svg { width: 30%; height: auto; filter: drop-shadow(0 6px 18px rgba(0,0,0,.5)); }
+    .ch .art .name { position: absolute; left: 16px; bottom: 12px; font: 800 20px Montserrat, sans-serif; text-shadow: 0 2px 12px rgba(0,0,0,.7); }
+    .ch .status { position: absolute; top: 12px; left: 12px; font: 700 11px Montserrat, sans-serif; letter-spacing: .08em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; background: rgba(15,16,24,.75); border: 1px solid rgba(253,249,237,.25); }
+    .ch .status.live { color: var(--navy); background: var(--gold); border-color: var(--gold); }
+    .ch .body { padding: 18px 20px 22px; }
+    .ch .type { color: var(--sky); font: 700 13px Montserrat, sans-serif; }
+    .ch .fit { color: #CDD4E4; font-size: 15px; margin: 8px 0 0; }
+    .ch .note { margin-top: 10px; font-size: 13px; color: var(--gold-soft); }
+    .ch.flagship { grid-column: span 3; flex-direction: row; }
+    .ch.flagship .art { flex: 0 0 42%; aspect-ratio: auto; min-height: 210px; }
+    .ch.flagship .body { padding: 28px 30px; align-self: center; }
+    .ch.flagship .art .name { font-size: 30px; }
+
+    /* Steps */
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; counter-reset: step; }
+    .step { padding: 26px; border-radius: 18px; border: 1px solid var(--line); background: rgba(255,255,255,.02); }
+    .step::before { counter-increment: step; content: "0" counter(step); display: block; font: 800 34px Montserrat, sans-serif; color: var(--gold); margin-bottom: 10px; }
+    .step h3 { font-size: 19px; margin-bottom: 6px; }
+    .step p { margin: 0; color: var(--muted); font-size: 15px; }
+
+    /* Form */
+    .form-section { background: radial-gradient(700px 400px at 100% 0%, rgba(28,127,209,.25), transparent 60%), #0c0d15; border-top: 1px solid var(--line); }
+    form { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 20px; padding: 32px; border-radius: 22px; background: var(--navy-2); border: 1px solid var(--line); }
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    label, legend { font: 700 14px Montserrat, sans-serif; color: var(--ivory); }
+    .hint { font-size: 13px; color: var(--muted); font-weight: 400; font-family: Lato, sans-serif; }
+    input[type=text], input[type=email], input[type=url], select, textarea {
+      width: 100%; font: inherit; font-size: 16px; color: var(--ivory); background: #0b0c14; border: 1px solid rgba(169,178,200,.28); border-radius: 12px; padding: 12px 14px; }
+    input:focus, select:focus, textarea:focus { outline: 2px solid var(--sky); outline-offset: 1px; border-color: transparent; }
+    textarea { min-height: 110px; resize: vertical; }
+    fieldset { border: 0; padding: 0; margin: 0; }
+    .choices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+    .choice { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(169,178,200,.22); cursor: pointer; font: 400 15px Lato, sans-serif; }
+    .choice:has(input:checked) { border-color: var(--gold); background: rgba(245,185,66,.08); }
+    .choice input { margin-top: 4px; accent-color: var(--gold); }
+    .choice b { font-family: Montserrat, sans-serif; font-size: 14px; display: block; }
+    .choice small { color: var(--muted); }
+    .agree { display: flex; gap: 10px; align-items: flex-start; font: 400 15px Lato, sans-serif; color: #D2D8E6; }
+    .agree input { margin-top: 5px; accent-color: var(--gold); }
+    .hp { position: absolute; left: -9999px; }
+    .submit-row { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+    .msg { font-size: 15px; }
+    .msg.err { color: #FF9C8A; }
+    .thanks { display: none; text-align: center; padding: 56px 32px; border-radius: 22px; background: var(--navy-2); border: 1px solid rgba(245,185,66,.45); }
+    .thanks h3 { font-size: 30px; color: var(--gold); margin-bottom: 12px; }
+    .thanks p { color: #D2D8E6; max-width: 520px; margin: 0 auto; }
+
+    footer { padding: 36px 0 48px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+    footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+
+    @media (max-width: 900px) {
+      .hero-grid, .paths { grid-template-columns: 1fr; }
+      .channels, .steps { grid-template-columns: 1fr 1fr; }
+      .ch.flagship { grid-column: 1 / -1; flex-direction: column; }
+      .ch.flagship .art { min-height: 0; aspect-ratio: 16/9; }
+    }
+    @media (max-width: 600px) {
+      .nav img { height: 56px; margin-left: -12px; }
+      .nav a.btn { display: none; }
+      .channels, .steps, form, .choices { grid-template-columns: 1fr; }
+      form { padding: 22px 18px; }
+      section { padding: 64px 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <nav class="nav">
+        <img src="<?!= logoSrc ?>" alt="Eudaimonia TV">
+        <a class="btn btn-gold" href="#join">Bring your film</a>
+      </nav>
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow">For Eudaimonia Project filmmakers</span>
+          <h1>Your film, streaming on Roku. <em>Free.</em></h1>
+          <p class="lede">We're inviting filmmakers from The Eudaimonia Project Film Festival to stream their work on our Roku channels. Our channels are free to watch with no sign-in, so your film reaches people without anything standing in the way.</p>
+          <div class="ctas">
+            <a class="btn btn-gold" href="#join">Bring your film</a>
+            <a class="btn btn-ghost" href="#channels">See the channels</a>
+          </div>
+          <div class="badges"><span>Free for filmmakers</span><span>Free to watch</span><span>No sign-in for viewers</span></div>
+        </div>
+        <div aria-hidden="true">
+          <div class="tv"><div class="screen">
+            <svg class="glow" viewBox="0 0 120 120"><defs><radialGradient id="g" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FCEB7A"/><stop offset=".45" stop-color="#F5B942"/><stop offset="1" stop-color="#F5B942" stop-opacity="0"/></radialGradient></defs><circle cx="60" cy="60" r="58" fill="url(#g)" opacity=".35"/><path d="M60 22c9 14 14 24 14 33a14 14 0 0 1-28 0c0-9 5-19 14-33z" fill="#F5B942"/><path d="M60 40c4 7 6 11 6 15a6 6 0 0 1-12 0c0-4 2-8 6-15z" fill="#FDF9ED"/></svg>
+            <span class="rowlabel" style="top:20%">Indie Movie Network</span>
+            <div class="tiles" style="top:27%">
+              <div class="tile focus" style="--c1:#1C7FD1;--c2:#0F1018"></div>
+              <div class="tile" style="--c1:#003E8A;--c2:#4DC5FE"></div>
+              <div class="tile" style="--c1:#F5B942;--c2:#003E8A"></div>
+              <div class="tile" style="--c1:#4DC5FE;--c2:#0F1018"></div>
+            </div>
+            <span class="rowlabel" style="top:58%">EU TV · Wellness</span>
+            <div class="tiles" style="top:65%">
+              <div class="tile" style="--c1:#003E8A;--c2:#0F1018"></div>
+              <div class="tile" style="--c1:#1C7FD1;--c2:#F5B942"></div>
+              <div class="tile" style="--c1:#4DC5FE;--c2:#003E8A"></div>
+              <div class="tile" style="--c1:#0F1018;--c2:#1C7FD1"></div>
+            </div>
+          </div></div>
+          <div class="stand"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Two ways in</span>
+        <h2>Get seen. Get paid, if you want to.</h2>
+      </div>
+      <div class="paths">
+        <div class="path">
+          <span class="tag">Option 1</span>
+          <h3>Free exposure on Roku</h3>
+          <p>We stream your film on our Roku channels at no cost to you, including Tusk TV, our flagship network that carries all of them.</p>
+          <div class="price">$0</div>
+        </div>
+        <div class="path gold">
+          <span class="tag">Option 2</span>
+          <h3>Earn from your film</h3>
+          <p>Want to make money from your work? We can also add your film to our subscription streaming service at <a href="https://watch.eudaimoniatv.com" target="_blank" rel="noopener">watch.eudaimoniatv.com</a> and talk through the earning options with you.</p>
+          <div class="price" style="font-size:22px;color:var(--gold)">Let's talk</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="channels" style="padding-top:20px">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">The channels</span>
+        <h2>Find the right home for your film</h2>
+        <p>Pick the channels that fit your work. Every channel is free to watch on Roku with no sign-in.</p>
+      </div>
+      <div class="channels">
+        <article class="ch flagship" style="--a1:rgba(245,185,66,.55);--a2:#003E8A">
+          <div class="art"><span class="status">Launching Nov 2</span>
+            <svg viewBox="0 0 64 64" fill="none"><path d="M32 6l22 8v16c0 14-10 24-22 28C20 54 10 44 10 30V14z" fill="#0F1018" stroke="#F5B942" stroke-width="3"/><path d="M22 40c4-12 6-18 10-22 4 4 6 10 10 22" stroke="#FDF9ED" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="24" r="3" fill="#F5B942"/></svg>
+            <span class="name">Tusk TV</span></div>
+          <div class="body"><div class="type">The flagship network</div>
+            <p class="fit">Combines every channel below into one place, with the widest audience. Films on any of our channels can reach viewers here too.</p></div>
+        </article>
+
+        <article class="ch" style="--a1:rgba(77,197,254,.55);--a2:#003E8A">
+          <div class="art"><span class="status live">Live now</span>
+            <svg viewBox="0 0 64 64" fill="none"><path d="M32 54C16 44 8 34 8 24a12 12 0 0 1 24-4 12 12 0 0 1 24 4c0 10-8 20-24 30z" fill="#4DC5FE" opacity=".9"/><path d="M18 28h8l3-6 5 12 3-6h9" stroke="#0F1018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="name">EU TV</span></div>
+          <div class="body"><div class="type">Wellness network</div>
+            <p class="fit">Mental health, healing, fitness, relationships, plant-based food and uplifting short films.</p>
+            <div class="note">On Roku now: search "Eudaimonia" or use code VKVJ5D9</div></div>
+        </article>
+
+        <article class="ch" style="--a1:rgba(28,127,209,.6);--a2:#0F1018">
+          <div class="art"><span class="status">Launching Nov 2</span>
+            <svg viewBox="0 0 64 64" fill="none"><rect x="8" y="20" width="48" height="34" rx="4" fill="#1C7FD1"/><path d="M8 20l6-12h10l-6 12m6 0l6-12h10l-6 12m6 0l6-12h10l-6 12" stroke="#FDF9ED" stroke-width="3" stroke-linejoin="round"/><path d="M28 30v14l12-7z" fill="#F5B942"/></svg>
+            <span class="name">Indie Movie Network</span></div>
+          <div class="body"><div class="type">Independent film</div>
+            <p class="fit">Indie shorts, features, web series, animation, filmmaker podcasts and interviews, and trailers.</p></div>
+        </article>
+
+        <article class="ch" style="--a1:rgba(245,185,66,.45);--a2:#003E8A">
+          <div class="art"><span class="status">Launching Nov 2</span>
+            <svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="22" fill="#003E8A" stroke="#F5B942" stroke-width="3"/><path d="M32 14v6M32 44v6M14 32h6M44 32h6" stroke="#F5B942" stroke-width="3" stroke-linecap="round"/><path d="M26 38l4-12 8 8-12 4z" fill="#FDF9ED"/></svg>
+            <span class="name">Eudaimonia TV</span></div>
+          <div class="body"><div class="type">Lifestyle and purpose</div>
+            <p class="fit">Series and short films about living well, purpose, creativity and entrepreneurship.</p></div>
+        </article>
+
+        <article class="ch" style="--a1:rgba(77,197,254,.45);--a2:#0F1018">
+          <div class="art"><span class="status">Launching Nov 2</span>
+            <svg viewBox="0 0 64 64" fill="none"><circle cx="24" cy="44" r="8" fill="#F5B942"/><circle cx="46" cy="40" r="8" fill="#F5B942"/><path d="M32 44V14l22-6v32" stroke="#4DC5FE" stroke-width="4" stroke-linejoin="round"/></svg>
+            <span class="name">OTTV Plus +</span></div>
+          <div class="body"><div class="type">Entertainment and variety</div>
+            <p class="fit">Series, comedy and skits, music videos, cooking shows, interviews and short films.</p></div>
+        </article>
+
+        <article class="ch" style="--a1:rgba(245,185,66,.5);--a2:#151827">
+          <div class="art"><span class="status">Launching Nov 2</span>
+            <svg viewBox="0 0 64 64" fill="none"><rect x="22" y="6" width="20" height="32" rx="10" fill="#1C7FD1" stroke="#FDF9ED" stroke-width="3"/><path d="M14 30a18 18 0 0 0 36 0M32 48v10M22 58h20" stroke="#F5B942" stroke-width="3" stroke-linecap="round"/></svg>
+            <span class="name">Freestyle &amp; Laughs</span></div>
+          <div class="body"><div class="type">Hip-hop and comedy</div>
+            <p class="fit">Artist interviews, freestyles, battle rap, stand-up and culture talk.</p></div>
+        </article>
+
+        <article class="ch" style="--a1:rgba(77,197,254,.5);--a2:#003E8A">
+          <div class="art"><span class="status">Launching Nov 2</span>
+            <svg viewBox="0 0 64 64" fill="none"><path d="M32 8c10 10 14 20 14 28a14 14 0 0 1-28 0c0-8 4-18 14-28z" fill="#4DC5FE"/><path d="M32 22v26M24 36l8 8 8-8" stroke="#0F1018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="name">In Vivo Exposure</span></div>
+          <div class="body"><div class="type">Health and wellness</div>
+            <p class="fit">Mental health education, mindfulness, couples and relationships, and healing stories.</p></div>
+        </article>
+
+        <article class="ch" style="--a1:rgba(252,235,122,.5);--a2:#1C7FD1">
+          <div class="art"><span class="status">Launching Nov 2</span>
+            <svg viewBox="0 0 64 64" fill="none"><path d="M32 8l6 14 15 1-12 10 4 15-13-8-13 8 4-15-12-10 15-1z" fill="#FCEB7A" stroke="#0F1018" stroke-width="2" stroke-linejoin="round"/></svg>
+            <span class="name">OTTV Kids</span></div>
+          <div class="body"><div class="type">Kids and family</div>
+            <p class="fit">Learning shows, kids' series, animation, stories and songs.</p>
+            <div class="note">Every title must be kid-safe.</div></div>
+        </article>
+
+        <article class="ch" style="--a1:rgba(245,185,66,.4);--a2:#0F1018">
+          <div class="art"><span class="status">Coming soon</span>
+            <svg viewBox="0 0 64 64" fill="none"><rect x="14" y="14" width="36" height="36" rx="6" fill="#151827" stroke="#4DC5FE" stroke-width="3"/><path d="M22 14V8M32 14V8M42 14V8M22 56v-6M32 56v-6M42 56v-6M14 22H8M14 32H8M14 42H8M56 22h-6M56 32h-6M56 42h-6" stroke="#4DC5FE" stroke-width="3" stroke-linecap="round"/><text x="32" y="38" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="14" fill="#F5B942">AI</text></svg>
+            <span class="name">Synth TV</span></div>
+          <div class="body"><div class="type">AI-made films</div>
+            <p class="fit">AI short films, AI animation and AI music videos.</p>
+            <div class="note">Every video is labeled "Made with AI".</div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:20px">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">How it works</span>
+        <h2>Three steps to the screen</h2>
+      </div>
+      <div class="steps">
+        <div class="step"><h3>Tell us about your film</h3><p>Fill in the form below with your film and a screener link, and pick the channels that fit.</p></div>
+        <div class="step"><h3>We watch it</h3><p>Our team reviews your film and follows up by email with next steps.</p></div>
+        <div class="step"><h3>It goes live on Roku</h3><p>Your film streams on the channels that fit it, free for anyone to watch.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="join" class="form-section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Bring your film</span>
+        <h2>Tell us about your film</h2>
+        <p>It takes about three minutes. Share a link to your film rather than uploading the file. A private Vimeo, YouTube or Google Drive link works.</p>
+      </div>
+
+      <form id="signup" novalidate>
+        <div class="field"><label for="name">Your name</label><input id="name" name="name" type="text" autocomplete="name" required></div>
+        <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="title">Film title</label><input id="title" name="title" type="text" required></div>
+        <div class="field"><label for="runtime">Runtime <span class="hint">(minutes)</span></label><input id="runtime" name="runtime" type="text" inputmode="numeric" placeholder="e.g. 12"></div>
+        <div class="field"><label for="link">Link to watch your film</label><input id="link" name="link" type="url" placeholder="https://vimeo.com/..." required></div>
+        <div class="field"><label for="password">Password for the link <span class="hint">(if it has one)</span></label><input id="password" name="password" type="text" autocomplete="off"></div>
+        <div class="field"><label for="tracking">FilmFreeway tracking number <span class="hint">(optional)</span></label><input id="tracking" name="tracking" type="text"></div>
+        <div class="field"><label for="ai">Was AI used to make it?</label>
+          <select id="ai" name="ai"><option value="">Choose one</option><option>No</option><option>Partly (some AI tools)</option><option>Yes, it's AI-made</option></select></div>
+        <div class="field full"><label for="synopsis">Short synopsis</label><textarea id="synopsis" name="synopsis" maxlength="1500" placeholder="Two or three sentences about your film."></textarea></div>
+
+        <fieldset class="field full">
+          <legend>Which channels fit your film? <span class="hint">Pick any that apply.</span></legend>
+          <div class="choices">
+            <label class="choice"><input type="checkbox" name="channels" value="Indie Movie Network"><span><b>Indie Movie Network</b><small>Independent film</small></span></label>
+            <label class="choice"><input type="checkbox" name="channels" value="EU TV"><span><b>EU TV</b><small>Wellness network</small></span></label>
+            <label class="choice"><input type="checkbox" name="channels" value="In Vivo Exposure"><span><b>In Vivo Exposure</b><small>Health and wellness</small></span></label>
+            <label class="choice"><input type="checkbox" name="channels" value="Eudaimonia TV"><span><b>Eudaimonia TV</b><small>Lifestyle and purpose</small></span></label>
+            <label class="choice"><input type="checkbox" name="channels" value="OTTV Plus +"><span><b>OTTV Plus +</b><small>Entertainment and variety</small></span></label>
+            <label class="choice"><input type="checkbox" name="channels" value="Freestyle & Laughs"><span><b>Freestyle &amp; Laughs</b><small>Hip-hop and comedy</small></span></label>
+            <label class="choice"><input type="checkbox" name="channels" value="OTTV Kids"><span><b>OTTV Kids</b><small>Kids and family (kid-safe only)</small></span></label>
+            <label class="choice"><input type="checkbox" name="channels" value="Synth TV"><span><b>Synth TV</b><small>AI-made films (coming soon)</small></span></label>
+            <label class="choice"><input type="checkbox" name="channels" value="Not sure"><span><b>Not sure</b><small>Help me choose</small></span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="field full">
+          <legend>What are you interested in?</legend>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="option" value="Free Roku exposure" checked><span><b>Free exposure on Roku</b><small>Stream on our Roku channels at no cost</small></span></label>
+            <label class="choice"><input type="radio" name="option" value="Roku + earning on watch.eudaimoniatv.com"><span><b>Roku and earning</b><small>Also talk about earning on watch.eudaimoniatv.com</small></span></label>
+          </div>
+        </fieldset>
+
+        <div class="field full">
+          <label class="agree"><input type="checkbox" id="rights" name="rights" value="yes" required><span>I made this film or have permission to share it, and I'm happy for The Eudaimonia Project to contact me about streaming it.</span></label>
+        </div>
+        <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <div class="submit-row">
+          <button class="btn btn-gold" type="submit" id="send">Send my film</button>
+          <span class="msg" id="msg" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+
+      <div class="thanks" id="thanks">
+        <h3>Thank you. We've got it.</h3>
+        <p>Our team will watch your film and follow up by email with next steps. In the meantime, you can find EU TV on Roku by searching "Eudaimonia" or using code VKVJ5D9.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>The Eudaimonia Project Film Festival · Eudaimonia TV</span>
+      <span><a href="https://watch.eudaimoniatv.com" target="_blank" rel="noopener">watch.eudaimoniatv.com</a></span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var form = document.getElementById('signup');
+      var msg = document.getElementById('msg');
+      var send = document.getElementById('send');
+
+      function collect() {
+        var data = {};
+        ['name', 'email', 'title', 'runtime', 'link', 'password', 'tracking', 'ai', 'synopsis', 'website'].forEach(function (k) {
+          data[k] = (form.elements[k].value || '').trim();
+        });
+        data.channels = Array.prototype.filter.call(form.querySelectorAll('input[name=channels]'), function (c) { return c.checked; })
+          .map(function (c) { return c.value; }).join(', ');
+        data.option = form.querySelector('input[name=option]:checked').value;
+        data.rights = form.elements.rights.checked ? 'yes' : '';
+        return data;
+      }
+
+      function check(d) {
+        if (!d.name) return 'Please add your name.';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) return 'Please check your email address.';
+        if (!d.title) return 'Please add your film title.';
+        if (!/^https?:\/\/\S+$/i.test(d.link)) return 'Please add a full link to watch your film, starting with https://';
+        if (!d.channels) return 'Please pick at least one channel, or "Not sure".';
+        if (!d.rights) return 'Please tick the box confirming you can share this film.';
+        return '';
+      }
+
+      function done() {
+        form.style.display = 'none';
+        document.getElementById('thanks').style.display = 'block';
+        document.getElementById('join').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      function fail(text) {
+        send.disabled = false;
+        send.textContent = 'Send my film';
+        msg.className = 'msg err';
+        msg.textContent = text || 'Something went wrong. Please try again in a minute.';
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var d = collect();
+        var problem = check(d);
+        if (problem) { msg.className = 'msg err'; msg.textContent = problem; return; }
+        msg.className = 'msg'; msg.textContent = '';
+        send.disabled = true;
+        send.textContent = 'Sending…';
+        if (window.google && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(function (r) { if (r && r.ok) done(); else fail(r && r.error); })
+            .withFailureHandler(function () { fail(); })
+            .submitSignup(d);
+        } else {
+          // Preview outside Google Apps Script: nothing is saved.
+          setTimeout(done, 600);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
