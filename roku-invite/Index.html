@@ -83,6 +83,8 @@
     .ch .type { color: var(--sky); font: 700 13px Montserrat, sans-serif; }
     .ch .fit { color: #CDD4E4; font-size: 15px; margin: 8px 0 0; }
     .ch .note { margin-top: 10px; font-size: 13px; color: var(--gold-soft); }
+    .ch .addlink { display: inline-block; margin-top: 12px; font: 700 14px Montserrat, sans-serif; color: var(--gold); text-decoration: none; }
+    .ch .addlink:hover { text-decoration: underline; }
     .ch.flagship { grid-column: span 3; flex-direction: row; }
     .ch.flagship .art { flex: 0 0 42%; aspect-ratio: auto; min-height: 210px; }
     .ch.flagship .body { padding: 28px 30px; align-self: center; }
@@ -228,7 +230,8 @@
             <span class="name">EU TV</span></div>
           <div class="body"><div class="type">Wellness network</div>
             <p class="fit">Mental health, healing, fitness, relationships, plant-based food and uplifting short films.</p>
-            <div class="note">On Roku now: search "Eudaimonia" or use code VKVJ5D9</div></div>
+            <div class="note">Live now in the US. On your TV, search "Eudaimonia" and pick EU TV, or use code VKVJ5D9.</div>
+            <a class="addlink" href="https://my.roku.com/account/add/VKVJ5D9" target="_blank" rel="noopener">Add EU TV to your Roku →</a></div>
         </article>
 
         <article class="ch" style="--a1:rgba(28,127,209,.6);--a2:#0F1018">
@@ -350,7 +353,7 @@
         </fieldset>
 
         <div class="field full">
-          <label class="agree"><input type="checkbox" id="rights" name="rights" value="yes" required><span>I made this film or have permission to share it, and I'm happy for The Eudaimonia Project to contact me about streaming it.</span></label>
+          <label class="agree"><input type="checkbox" id="rights" name="rights" value="yes" required><span>I own the rights to everything in this film, including the music, and I'm happy for The Eudaimonia Project to contact me about streaming it.</span></label>
         </div>
         <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
 
@@ -362,7 +365,7 @@
 
       <div class="thanks" id="thanks">
         <h3>Thank you. We've got it.</h3>
-        <p>Our team will watch your film and follow up by email with next steps. In the meantime, you can find EU TV on Roku by searching "Eudaimonia" or using code VKVJ5D9.</p>
+        <p>Our team will watch your film and follow up by email with next steps. In the meantime, <a href="https://my.roku.com/account/add/VKVJ5D9" target="_blank" rel="noopener">add EU TV to your Roku</a>, or search "Eudaimonia" on your TV and pick EU TV.</p>
       </div>
     </div>
   </section>
@@ -370,6 +373,7 @@
   <footer>
     <div class="wrap">
       <span>The Eudaimonia Project Film Festival · Eudaimonia TV</span>
+      <span>Questions? <a href="mailto:ceo@theinvivoexposure.com">ceo@theinvivoexposure.com</a> · <a href="tel:+12405013850">240-501-3850</a></span>
       <span><a href="https://watch.eudaimoniatv.com" target="_blank" rel="noopener">watch.eudaimoniatv.com</a></span>
     </div>
   </footer>
